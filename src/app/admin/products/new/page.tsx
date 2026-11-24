@@ -22,7 +22,7 @@ type Variant = {
   estimatedAge: string | null;
 };
 
-const DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
+const DEFAULT_SIZES: string[] = [];
 
 const SIZE_RANK: Record<string, number> = {
   XXS: 1, XS: 2, S: 3, M: 4, L: 5, XL: 6, XXL: 7, "2XL": 7, XXXL: 8, "3XL": 8, "4XL": 9, "5XL": 10,
