@@ -7,7 +7,6 @@ type Category = { id: number; name: string };
 type Variant = {
   color: string;
   size: string;
-  baseHpp: number;
   retailPrice: number;
   wholesalePrice: number;
   minWholesaleQty: number;
@@ -86,7 +85,6 @@ export default function NewProductPage() {
       {
         color: colors[0] || "",
         size: sizes[0] || "",
-        baseHpp: 0,
         retailPrice: 0,
         wholesalePrice: 0,
         minWholesaleQty: 12,
@@ -253,21 +251,17 @@ export default function NewProductPage() {
                       </div>
                       <div>
                         <label className="block text-xs mb-1">Ukuran</label>
-                        <input
-                          list="sizes-list"
+                        <select
                           value={v.size}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            updateVariant(idx, { size: val });
-                            if (val && !sizes.includes(val)) setSizes((prev) => sortSizes([...prev, val]));
-                          }}
+                          onChange={(e) => updateVariant(idx, { size: e.target.value })}
                           className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm"
-                        />
+                        >
+                          {sizes.map((s) => (
+                            <option key={s} value={s}>{s}</option>
+                          ))}
+                        </select>
                       </div>
-                      <div>
-                        <label className="block text-xs mb-1">HPP</label>
-                        <input type="number" min={0} value={v.baseHpp} onChange={(e) => updateVariant(idx, { baseHpp: Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
-                      </div>
+
                       <div>
                         <label className="block text-xs mb-1">Harga Eceran</label>
                         <input type="number" min={0} value={v.retailPrice} onChange={(e) => updateVariant(idx, { retailPrice: Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
