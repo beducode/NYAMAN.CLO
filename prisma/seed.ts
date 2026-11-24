@@ -27,58 +27,9 @@ async function main() {
 
   // Categories
   const cats = await Promise.all([
-    prisma.category.upsert({ where: { slug: "heavyweight-tee" }, update: {}, create: { name: "Heavyweight Tee", slug: "heavyweight-tee", description: "Kaos heavyweight premium" } }),
-    prisma.category.upsert({ where: { slug: "workshirt-polo" }, update: {}, create: { name: "Workshirt & Polo", slug: "workshirt-polo", description: "Workshirt dan polo" } }),
-    prisma.category.upsert({ where: { slug: "outerwear" }, update: {}, create: { name: "Outerwear", slug: "outerwear", description: "Jaket dan outerwear" } }),
+    prisma.category.upsert({ where: { slug: "dewasa" }, update: {}, create: { name: "Dewasa", slug: "dewasa", description: "Produk untuk dewasa" } }),
+    prisma.category.upsert({ where: { slug: "anak" }, update: {}, create: { name: "Anak", slug: "anak", description: "Produk untuk anak" } }),
   ]);
-
-  const productsData = [
-    { name: "Heavyweight Tee", slug: "heavyweight-tee", cat: cats[0].id, material: "Cotton Combed 24s", price: 85000, wholesale: 65000 },
-    { name: "Workshirt Classic", slug: "workshirt-classic", cat: cats[1].id, material: "Twil", price: 120000, wholesale: 95000 },
-    { name: "Cargo Pants", slug: "cargo-pants", cat: cats[2].id, material: "Ripstop", price: 180000, wholesale: 140000 },
-    { name: "Outerwear Jacket", slug: "outerwear-jacket", cat: cats[2].id, material: "Fleece", price: 250000, wholesale: 200000 },
-  ];
-
-  const colors = ["Black", "White", "Navy"];
-  const sizes = ["S", "M", "L", "XL", "XXL"];
-
-  for (const p of productsData) {
-    const product = await prisma.product.upsert({
-      where: { slug: p.slug },
-      update: {},
-      create: {
-        name: p.name,
-        slug: p.slug,
-        categoryId: p.cat,
-        materialType: p.material,
-        isPublished: true,
-        description: `${p.name} dari nyaman.clo`,
-      },
-    });
-
-    for (const color of colors) {
-      for (const size of sizes) {
-        const sku = `NYM-${p.slug.toUpperCase().replace(/-/g, "")}-${color.toUpperCase().slice(0, 3)}-${size}`;
-        await prisma.productVariant.upsert({
-          where: { sku },
-          update: {},
-          create: {
-            productId: product.id,
-            sku,
-            color,
-            size,
-            baseHpp: Math.round(p.price * 0.45),
-            retailPrice: p.price,
-            wholesalePrice: p.wholesale,
-            minWholesaleQty: 12,
-            currentStock: Math.floor(Math.random() * 40) + 5,
-            lowStockThreshold: 5,
-            barcodeCode: `BC-${sku}`,
-          },
-        });
-      }
-    }
-  }
 
   console.log("Seed complete. Super admin:", superAdmin.email);
 }
