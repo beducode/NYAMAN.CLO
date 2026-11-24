@@ -71,6 +71,7 @@ export default function EditProductPage() {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState("");
+  const [showSetup, setShowSetup] = useState(false);
 
   useEffect(() => {
     fetch("/api/categories").then((r) => r.json()).then((d) => setCategories(d));
@@ -280,9 +281,22 @@ export default function EditProductPage() {
               <div className="flex items-center justify-between">
                 <h2 className="font-display font-semibold text-ink-primary">Varian Produk</h2>
                 <div className="flex gap-2">
-                  <button type="button" onClick={generateVariants} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold">Generate Varian</button>
+                  <button type="button" onClick={() => setShowSetup((s) => !s)} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold">Setup Ukuran</button>
                   <button type="button" onClick={addVariant} className="bg-ochre-accent text-ink-primary px-4 py-2 rounded-lg text-sm font-semibold">+ Tambah Varian</button>
                 </div>
+                {showSetup && (
+                  <div className="bg-background rounded-xl p-3 text-sm">
+                    <p className="font-semibold text-ink-primary mb-2">Setup Ukuran ({sizes.length}) & Perkiraan Usia ({estimatedAges.length})</p>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {sizes.map((s, i) => (
+                        <span key={s} className="text-xs px-2 py-1 rounded bg-forest-primary/10 text-forest-primary font-mono">
+                          {s}{estimatedAges[i] ? ` → ${estimatedAges[i]}` : ""}
+                        </span>
+                      ))}
+                    </div>
+                    <button type="button" onClick={generateVariants} className="bg-ochre-accent text-ink-primary px-4 py-2 rounded-lg text-sm font-semibold">Generate Varian</button>
+                  </div>
+                )}
               </div>
 
               {variants.length === 0 && <p className="text-sm text-ink-primary/60">Belum ada varian.</p>}
