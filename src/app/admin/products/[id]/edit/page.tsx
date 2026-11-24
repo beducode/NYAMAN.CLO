@@ -98,7 +98,7 @@ export default function EditProductPage() {
       const tpl: Record<string, any> = {};
       for (const v of vs) {
         if (!tpl[v.size]) {
-          tpl[v.size] = { retailPrice: v.retailPrice, wholesalePrice: v.wholesalePrice, minWholesaleQty: v.minWholesaleQty, currentStock: v.currentStock, lowStockThreshold: v.lowStockThreshold };
+          tpl[v.size] = { chestCircumference: v.chestCircumference, shirtLength: v.shirtLength, pantsLength: v.pantsLength, waistWidth: v.waistWidth, sleeveLength: v.sleeveLength, armpitCircumference: v.armpitCircumference, armCircumference: v.armCircumference };
         }
       }
       setSizeTemplates(tpl);
@@ -227,6 +227,10 @@ export default function EditProductPage() {
                 </select>
               </div>
 
+              <div>
+                <button type="button" onClick={() => setShowSetup((s) => !s)} disabled={!name || !categoryId || sizes.length === 0 || colors.length === 0 || (isAnak && estimatedAges.length === 0)} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Setup Ukuran</button>
+              </div>
+
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)} />
                 Published (tampil di storefront)
@@ -288,16 +292,12 @@ export default function EditProductPage() {
 
             <div className="bg-surface-card rounded-2xl border border-forest-primary/10 p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="font-display font-semibold text-ink-primary">Varian Produk</h2>
-                <div className="flex gap-2">
-                  <button type="button" onClick={() => setShowSetup((s) => !s)} disabled={!name || !categoryId || sizes.length === 0 || colors.length === 0 || (isAnak && estimatedAges.length === 0)} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Setup Ukuran</button>
-                </div>
                 {showSetup && (
                   <div className="bg-background rounded-xl p-3 text-sm">
                     <p className="font-semibold text-ink-primary mb-2">Setup Ukuran ({sizes.length}) & Perkiraan Usia ({estimatedAges.length})</p>
                     <div className="space-y-3 mb-3">
                       {sizes.map((s, i) => {
-                        const tpl = sizeTemplates[s] || { chestCircumference: null, shirtLength: null, pantsLength: null, waistWidth: null, sleeveLength: null, armpitCircumference: null, armCircumference: null };
+                        const tpl = sizeTemplates[s] || { retailPrice: 0, wholesalePrice: 0, minWholesaleQty: 12, currentStock: 0, lowStockThreshold: 5 };
                         return (
                           <div key={s} className="bg-surface-card rounded-lg border border-forest-primary/10 p-3">
                             <p className="text-sm font-semibold text-ink-primary mb-2">

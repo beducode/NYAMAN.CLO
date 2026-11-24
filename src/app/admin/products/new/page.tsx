@@ -320,10 +320,6 @@ export default function NewProductPage() {
 
             <div className="bg-surface-card rounded-2xl border border-forest-primary/10 p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="font-display font-semibold text-ink-primary">Varian Produk</h2>
-                <div className="flex gap-2">
-                  <button type="button" onClick={() => setShowSetup((s) => !s)} disabled={!name || !categoryId || sizes.length === 0 || colors.length === 0 || (isAnak && estimatedAges.length === 0)} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Setup Ukuran</button>
-                </div>
                 {showSetup && (
                   <div className="bg-background rounded-xl p-3 text-sm">
                     <p className="font-semibold text-ink-primary mb-2">Setup Ukuran ({sizes.length}) & Perkiraan Usia ({estimatedAges.length})</p>
