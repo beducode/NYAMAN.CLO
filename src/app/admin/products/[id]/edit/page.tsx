@@ -282,7 +282,6 @@ export default function EditProductPage() {
                 <h2 className="font-display font-semibold text-ink-primary">Varian Produk</h2>
                 <div className="flex gap-2">
                   <button type="button" onClick={() => setShowSetup((s) => !s)} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold">Setup Ukuran</button>
-                  <button type="button" onClick={addVariant} className="bg-ochre-accent text-ink-primary px-4 py-2 rounded-lg text-sm font-semibold">+ Tambah Varian</button>
                 </div>
                 {showSetup && (
                   <div className="bg-background rounded-xl p-3 text-sm">
