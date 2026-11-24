@@ -168,7 +168,10 @@ export default function NewProductPage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {sizes.map((s) => (
-                  <span key={s} className="text-xs px-2 py-1 rounded bg-forest-primary/10 text-forest-primary font-mono">{s}</span>
+                  <span key={s} className="text-xs px-2 py-1 rounded bg-forest-primary/10 text-forest-primary font-mono flex items-center gap-1">
+                    {s}
+                    <button type="button" onClick={() => { setSizes((prev) => prev.filter((x) => x !== s)); setVariants((prev) => prev.filter((v) => v.size !== s)); }} className="text-forest-primary/60 hover:text-status-out">&times;</button>
+                  </span>
                 ))}
               </div>
 
@@ -184,7 +187,10 @@ export default function NewProductPage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {colors.map((c) => (
-                  <span key={c} className="text-xs px-2 py-1 rounded bg-ochre-accent/20 text-ochre-hover">{c}</span>
+                  <span key={c} className="text-xs px-2 py-1 rounded bg-ochre-accent/20 text-ochre-hover flex items-center gap-1">
+                    {c}
+                    <button type="button" onClick={() => { setColors((prev) => prev.filter((x) => x !== c)); setVariants((prev) => prev.filter((v) => v.color !== c)); }} className="text-ochre-hover/60 hover:text-status-out">&times;</button>
+                  </span>
                 ))}
               </div>
             </div>
