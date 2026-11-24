@@ -42,6 +42,7 @@ export async function GET() {
         sleeveLength: v.sleeveLength,
         armpitCircumference: v.armpitCircumference,
         armCircumference: v.armCircumference,
+        estimatedAge: v.estimatedAge,
       })),
     }))
   );
@@ -108,6 +109,7 @@ export async function POST(req: Request) {
             sleeveLength: v.sleeveLength ? Number(v.sleeveLength) : null,
             armpitCircumference: v.armpitCircumference ? Number(v.armpitCircumference) : null,
             armCircumference: v.armCircumference ? Number(v.armCircumference) : null,
+            estimatedAge: v.estimatedAge || null,
             barcodeCode: `BC-${sku}`,
           },
         });

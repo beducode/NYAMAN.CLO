@@ -84,6 +84,7 @@ model ProductVariant {
   sleeveLength       Float?   @map("sleeve_length")
   armpitCircumference Float?  @map("armpit_circumference")
   armCircumference   Float?   @map("arm_circumference")
+  estimatedAge       String?  @map("estimated_age")
   barcodeCode        String   @unique @map("barcode_code")
 
   product          Product           @relation(fields: [productId], references: [id])

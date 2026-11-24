@@ -19,6 +19,7 @@ type Variant = {
   sleeveLength: number | null;
   armpitCircumference: number | null;
   armCircumference: number | null;
+  estimatedAge: string | null;
 };
 
 const DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
@@ -44,6 +45,20 @@ function sortSizes(list: string[]) {
   });
 }
 
+function ageRank(s: string) {
+  const num = parseInt(s, 10);
+  return isNaN(num) ? 999 : num;
+}
+
+function sortEstimatedAges(list: string[]) {
+  return Array.from(new Set(list)).sort((a, b) => {
+    const ra = ageRank(a);
+    const rb = ageRank(b);
+    if (ra !== rb) return ra - rb;
+    return a.localeCompare(b, "id");
+  });
+}
+
 export default function NewProductPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -55,12 +70,17 @@ export default function NewProductPage() {
 
   const [sizes, setSizes] = useState<string[]>(DEFAULT_SIZES);
   const [colors, setColors] = useState<string[]>([]);
+  const [estimatedAges, setEstimatedAges] = useState<string[]>([]);
   const [sizeInput, setSizeInput] = useState("");
   const [colorInput, setColorInput] = useState("");
+  const [estimatedAgeInput, setEstimatedAgeInput] = useState("");
 
   const [variants, setVariants] = useState<Variant[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const selectedCategory = categories.find((c) => c.id === Number(categoryId));
+  const isAnak = selectedCategory?.name === "Anak";
 
   useEffect(() => {
     fetch("/api/categories").then((r) => r.json()).then((d) => setCategories(d));
@@ -98,6 +118,7 @@ export default function NewProductPage() {
         sleeveLength: null,
         armpitCircumference: null,
         armCircumference: null,
+        estimatedAge: null,
       },
     ]);
   }
@@ -209,6 +230,34 @@ export default function NewProductPage() {
                 ))}
               </div>
 
+              {isAnak && (
+                <>
+                  <h2 className="font-display font-semibold text-ink-primary mt-4">Daftar Perkiraan Usia</h2>
+                  <div className="flex gap-2">
+                    <input
+                      value={estimatedAgeInput}
+                      onChange={(e) => setEstimatedAgeInput(e.target.value)}
+                      placeholder="Tambah perkiraan usia (mis. 2-3 tahun)"
+                      className="flex-1 rounded-lg border border-forest-primary/20 px-3 py-2 text-sm"
+                    />
+                    <button type="button" onClick={() => {
+                      const v = estimatedAgeInput.trim();
+                      if (!v) return;
+                      setEstimatedAges((prev) => sortEstimatedAges([...prev, v]));
+                      setEstimatedAgeInput("");
+                    }} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm">Tambah</button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {estimatedAges.map((a) => (
+                      <span key={a} className="text-xs px-2 py-1 rounded bg-forest-primary/10 text-forest-primary flex items-center gap-1">
+                        {a}
+                        <button type="button" onClick={() => { setEstimatedAges((prev) => prev.filter((x) => x !== a)); setVariants((prev) => prev.filter((v) => v.estimatedAge !== a)); }} className="text-forest-primary/60 hover:text-status-out">&times;</button>
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+
               <h2 className="font-display font-semibold text-ink-primary mt-4">Daftar Warna/Motif</h2>
               <div className="flex gap-2">
                 <input
@@ -271,6 +320,21 @@ export default function NewProductPage() {
                           ))}
                         </select>
                       </div>
+                      {isAnak && (
+                        <div>
+                          <label className="block text-xs mb-1">Perkiraan Usia</label>
+                          <select
+                            value={v.estimatedAge ?? ""}
+                            onChange={(e) => updateVariant(idx, { estimatedAge: e.target.value || null })}
+                            className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm"
+                          >
+                            <option value="">Pilih...</option>
+                            {estimatedAges.map((a) => (
+                              <option key={a} value={a}>{a}</option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
 
                       <div>
                         <label className="block text-xs mb-1">Harga Eceran</label>
