@@ -63,6 +63,7 @@ export default function EditProductPage() {
   const [sizes, setSizes] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
   const [estimatedAges, setEstimatedAges] = useState<string[]>([]);
+  const [sizeTemplates, setSizeTemplates] = useState<Record<string, { retailPrice: number; wholesalePrice: number; minWholesaleQty: number; currentStock: number; lowStockThreshold: number }>>({});
   const [sizeInput, setSizeInput] = useState("");
   const [colorInput, setColorInput] = useState("");
   const [estimatedAgeInput, setEstimatedAgeInput] = useState("");
@@ -94,6 +95,13 @@ export default function EditProductPage() {
       setSizes(sortSizes(Array.from(new Set(vs.map((v: any) => v.size)))));
       setColors(Array.from(new Set(vs.map((v: any) => v.color))));
       setEstimatedAges(sortEstimatedAges(Array.from(new Set(vs.map((v: any) => v.estimatedAge).filter(Boolean)))));
+      const tpl: Record<string, any> = {};
+      for (const v of vs) {
+        if (!tpl[v.size]) {
+          tpl[v.size] = { retailPrice: v.retailPrice, wholesalePrice: v.wholesalePrice, minWholesaleQty: v.minWholesaleQty, currentStock: v.currentStock, lowStockThreshold: v.lowStockThreshold };
+        }
+      }
+      setSizeTemplates(tpl);
       setFetching(false);
     });
   }, [id]);
@@ -137,14 +145,15 @@ export default function EditProductPage() {
     for (const c of cList) {
       sList.forEach((s, i) => {
         const age = isAnak && estimatedAges.length ? (estimatedAges[i] ?? null) : null;
+        const tpl = sizeTemplates[s] || { retailPrice: 0, wholesalePrice: 0, minWholesaleQty: 12, currentStock: 0, lowStockThreshold: 5 };
         combos.push({
           color: c,
           size: s,
-          retailPrice: 0,
-          wholesalePrice: 0,
-          minWholesaleQty: 12,
-          currentStock: 0,
-          lowStockThreshold: 5,
+          retailPrice: tpl.retailPrice,
+          wholesalePrice: tpl.wholesalePrice,
+          minWholesaleQty: tpl.minWholesaleQty,
+          currentStock: tpl.currentStock,
+          lowStockThreshold: tpl.lowStockThreshold,
           chestCircumference: null,
           shirtLength: null,
           pantsLength: null,
@@ -286,12 +295,39 @@ export default function EditProductPage() {
                 {showSetup && (
                   <div className="bg-background rounded-xl p-3 text-sm">
                     <p className="font-semibold text-ink-primary mb-2">Setup Ukuran ({sizes.length}) & Perkiraan Usia ({estimatedAges.length})</p>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {sizes.map((s, i) => (
-                        <span key={s} className="text-xs px-2 py-1 rounded bg-forest-primary/10 text-forest-primary font-mono">
-                          {s}{estimatedAges[i] ? ` | ${estimatedAges[i]}` : ""}
-                        </span>
-                      ))}
+                    <div className="space-y-3 mb-3">
+                      {sizes.map((s, i) => {
+                        const tpl = sizeTemplates[s] || { retailPrice: 0, wholesalePrice: 0, minWholesaleQty: 12, currentStock: 0, lowStockThreshold: 5 };
+                        return (
+                          <div key={s} className="bg-surface-card rounded-lg border border-forest-primary/10 p-3">
+                            <p className="text-sm font-semibold text-ink-primary mb-2">
+                              {s}{estimatedAges[i] ? ` | ${estimatedAges[i]}` : ""}
+                            </p>
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                              <div>
+                                <label className="block text-xs mb-1">Harga Eceran</label>
+                                <input type="number" min={0} value={tpl.retailPrice} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, retailPrice: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                              </div>
+                              <div>
+                                <label className="block text-xs mb-1">Harga Grosir</label>
+                                <input type="number" min={0} value={tpl.wholesalePrice} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, wholesalePrice: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                              </div>
+                              <div>
+                                <label className="block text-xs mb-1">Min Grosir (pcs)</label>
+                                <input type="number" min={1} value={tpl.minWholesaleQty} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, minWholesaleQty: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                              </div>
+                              <div>
+                                <label className="block text-xs mb-1">Stok</label>
+                                <input type="number" min={0} value={tpl.currentStock} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, currentStock: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                              </div>
+                              <div>
+                                <label className="block text-xs mb-1">Minimal Stok</label>
+                                <input type="number" min={0} value={tpl.lowStockThreshold} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, lowStockThreshold: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                     <button type="button" onClick={generateVariants} className="bg-ochre-accent text-ink-primary px-4 py-2 rounded-lg text-sm font-semibold">Generate Varian</button>
                   </div>
