@@ -98,7 +98,7 @@ export default function EditProductPage() {
       const tpl: Record<string, any> = {};
       for (const v of vs) {
         if (!tpl[v.size]) {
-          tpl[v.size] = { chestCircumference: v.chestCircumference, shirtLength: v.shirtLength, pantsLength: v.pantsLength, waistWidth: v.waistWidth, sleeveLength: v.sleeveLength, armpitCircumference: v.armpitCircumference, armCircumference: v.armCircumference };
+          tpl[v.size] = { retailPrice: v.retailPrice, wholesalePrice: v.wholesalePrice, minWholesaleQty: v.minWholesaleQty, currentStock: v.currentStock, lowStockThreshold: v.lowStockThreshold };
         }
       }
       setSizeTemplates(tpl);
@@ -297,7 +297,7 @@ export default function EditProductPage() {
                     <p className="font-semibold text-ink-primary mb-2">Setup Ukuran ({sizes.length}) & Perkiraan Usia ({estimatedAges.length})</p>
                     <div className="space-y-3 mb-3">
                       {sizes.map((s, i) => {
-                        const tpl = sizeTemplates[s] || { retailPrice: 0, wholesalePrice: 0, minWholesaleQty: 12, currentStock: 0, lowStockThreshold: 5 };
+                        const tpl = sizeTemplates[s] || { chestCircumference: null, shirtLength: null, pantsLength: null, waistWidth: null, sleeveLength: null, armpitCircumference: null, armCircumference: null };
                         return (
                           <div key={s} className="bg-surface-card rounded-lg border border-forest-primary/10 p-3">
                             <p className="text-sm font-semibold text-ink-primary mb-2">
