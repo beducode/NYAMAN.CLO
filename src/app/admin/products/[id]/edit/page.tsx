@@ -39,6 +39,7 @@ function sortSizes(list: string[]) {
   });
 }
 function ageRank(s: string) { const num = parseInt(s, 10); return isNaN(num) ? 999 : num; }
+function titleCase(s: string) { return s.replace(/\b\w/g, (c) => c.toUpperCase()); }
 function sortEstimatedAges(list: string[]) {
   return Array.from(new Set(list)).sort((a, b) => {
     const ra = ageRank(a), rb = ageRank(b);
@@ -128,6 +129,37 @@ export default function EditProductPage() {
     setVariants((prev) => prev.filter((_, i) => i !== idx));
   }
 
+  function generateVariants() {
+    const cList = colors.length ? colors : [""];
+    const sList = sizes.length ? sizes : [""];
+    const aList = isAnak && estimatedAges.length ? estimatedAges : [null];
+    const combos: Variant[] = [];
+    for (const c of cList) {
+      for (const s of sList) {
+        for (const a of aList) {
+          combos.push({
+            color: c,
+            size: s,
+            retailPrice: 0,
+            wholesalePrice: 0,
+            minWholesaleQty: 12,
+            currentStock: 0,
+            lowStockThreshold: 5,
+            chestCircumference: null,
+            shirtLength: null,
+            pantsLength: null,
+            waistWidth: null,
+            sleeveLength: null,
+            armpitCircumference: null,
+            armCircumference: null,
+            estimatedAge: a,
+          });
+        }
+      }
+    }
+    setVariants(combos);
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name || !categoryId) { setError("Nama dan kategori wajib diisi"); return; }
@@ -166,7 +198,7 @@ export default function EditProductPage() {
             <div className="bg-surface-card rounded-2xl border border-forest-primary/10 p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Nama Produk</label>
-                <input value={name} onChange={(e) => setName(e.target.value)} required className="w-full rounded-lg border border-forest-primary/20 px-3 py-2" />
+                <input value={name} onChange={(e) => setName(titleCase(e.target.value))} required className="w-full rounded-lg border border-forest-primary/20 px-3 py-2" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Kategori</label>
@@ -249,7 +281,10 @@ export default function EditProductPage() {
             <div className="bg-surface-card rounded-2xl border border-forest-primary/10 p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="font-display font-semibold text-ink-primary">Varian Produk</h2>
-                <button type="button" onClick={addVariant} className="bg-ochre-accent text-ink-primary px-4 py-2 rounded-lg text-sm font-semibold">+ Tambah Varian</button>
+                <div className="flex gap-2">
+                  <button type="button" onClick={generateVariants} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold">Generate Varian</button>
+                  <button type="button" onClick={addVariant} className="bg-ochre-accent text-ink-primary px-4 py-2 rounded-lg text-sm font-semibold">+ Tambah Varian</button>
+                </div>
               </div>
 
               {variants.length === 0 && <p className="text-sm text-ink-primary/60">Belum ada varian.</p>}
@@ -261,26 +296,10 @@ export default function EditProductPage() {
                       <p className="text-sm font-semibold text-ink-primary">Varian #{idx + 1}</p>
                       <button type="button" onClick={() => removeVariant(idx)} className="text-xs text-status-out">Hapus</button>
                     </div>
+                    <p className="text-sm font-semibold text-ink-primary">
+                      {v.color || "-"} / {v.size || "-"}{v.estimatedAge ? ` (${v.estimatedAge})` : ""}
+                    </p>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div>
-                        <label className="block text-xs mb-1">Warna/Motif</label>
-                        <input list="colors-list" value={v.color} onChange={(e) => { const val = e.target.value; updateVariant(idx, { color: val }); if (val && !colors.includes(val)) setColors((prev) => Array.from(new Set([...prev, val]))); }} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
-                      </div>
-                      <div>
-                        <label className="block text-xs mb-1">Ukuran</label>
-                        <select value={v.size} onChange={(e) => updateVariant(idx, { size: e.target.value })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm">
-                          {sizes.map((s) => (<option key={s} value={s}>{s}</option>))}
-                        </select>
-                      </div>
-                      {isAnak && (
-                        <div>
-                          <label className="block text-xs mb-1">Perkiraan Usia</label>
-                          <select value={v.estimatedAge ?? ""} onChange={(e) => updateVariant(idx, { estimatedAge: e.target.value || null })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm">
-                            <option value="">Pilih...</option>
-                            {estimatedAges.map((a) => (<option key={a} value={a}>{a}</option>))}
-                          </select>
-                        </div>
-                      )}
                       <div>
                         <label className="block text-xs mb-1">Harga Eceran</label>
                         <input type="number" min={0} value={v.retailPrice} onChange={(e) => updateVariant(idx, { retailPrice: Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
