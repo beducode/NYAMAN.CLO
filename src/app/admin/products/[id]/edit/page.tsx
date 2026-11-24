@@ -337,7 +337,7 @@ export default function EditProductPage() {
                         );
                       })}
                     </div>
-                    <button type="button" onClick={generateVariants} className="bg-ochre-accent text-ink-primary px-4 py-2 rounded-lg text-sm font-semibold">Generate Varian</button>
+
                   </div>
                 )}
               </div>
