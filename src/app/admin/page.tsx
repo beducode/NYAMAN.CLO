@@ -43,7 +43,6 @@ export default async function AdminDashboard() {
           <Link href="/admin" className="block px-3 py-2 rounded-lg bg-white/10 font-semibold">Dashboard</Link>
           <Link href="/admin/production/new" className="block px-3 py-2 rounded-lg hover:bg-white/10">Input Produksi</Link>
           <Link href="/admin/orders" className="block px-3 py-2 rounded-lg hover:bg-white/10">Pesanan</Link>
-          <Link href="/admin/products" className="block px-3 py-2 rounded-lg hover:bg-white/10">Produk</Link>
         </nav>
         <div className="p-4 border-t border-white/10">
           <p className="text-xs text-white/70">{session?.roleName}</p>
