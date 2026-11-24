@@ -62,7 +62,6 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       });
 
       if (Array.isArray(variants)) {
-        // delete existing variants
         await tx.productVariant.deleteMany({ where: { productId: id } });
         for (const v of variants) {
           const color = String(v.color || "").trim();
@@ -116,5 +115,29 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ ok: true, id: product.id });
   } catch (e: any) {
     return NextResponse.json({ error: e.message || "Gagal menyimpan" }, { status: 500 });
+  }
+}
+
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { id } = await params;
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.productVariant.deleteMany({ where: { productId: id } });
+      await tx.product.delete({ where: { id } });
+      await tx.activityLog.create({
+        data: {
+          userId: session.userId,
+          action: "DELETE_PRODUCT",
+          targetTable: "products",
+          targetId: id,
+          newValues: {},
+        },
+      });
+    });
+    return NextResponse.json({ ok: true });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message || "Gagal menghapus" }, { status: 500 });
   }
 }

@@ -15,6 +15,8 @@ type Product = {
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -25,6 +27,15 @@ export default function AdminProductsPage() {
   }
 
   useEffect(() => { load(); }, []);
+
+  async function confirmDelete() {
+    if (!deleteId) return;
+    setDeleting(true);
+    await fetch(`/api/admin/products/${deleteId}`, { method: "DELETE" });
+    setDeleting(false);
+    setDeleteId(null);
+    load();
+  }
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -73,8 +84,9 @@ export default function AdminProductsPage() {
                           {p.isPublished ? "Published" : "Draft"}
                         </span>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 flex gap-3">
                         <Link href={`/admin/products/${p.id}/edit`} className="text-sm text-forest-primary hover:underline">Edit</Link>
+                        <button onClick={() => setDeleteId(p.id)} className="text-sm text-status-out hover:underline">Hapus</button>
                       </td>
                     </tr>
                   ))}
@@ -87,6 +99,21 @@ export default function AdminProductsPage() {
           )}
         </div>
       </main>
+
+      {deleteId && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-surface-card rounded-2xl p-6 w-full max-w-sm border border-forest-primary/10">
+            <h3 className="font-display font-semibold text-ink-primary mb-2">Hapus Produk?</h3>
+            <p className="text-sm text-ink-primary/70 mb-4">Produk dan semua variannya akan dihapus permanen.</p>
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setDeleteId(null)} className="px-4 py-2 rounded-lg border border-forest-primary/20 text-sm">Batal</button>
+              <button onClick={confirmDelete} disabled={deleting} className="px-4 py-2 rounded-lg bg-status-out text-white text-sm font-semibold disabled:opacity-60">
+                {deleting ? "Menghapus..." : "Hapus"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
