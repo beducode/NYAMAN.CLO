@@ -56,9 +56,6 @@ export default async function AdminDashboard() {
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-display font-bold text-ink-primary">Dashboard Eksekutif</h1>
-            <Link href="/admin/production/new" className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-forest-dark">
-              Input Hasil Produksi
-            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
