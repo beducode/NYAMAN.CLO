@@ -87,16 +87,16 @@ export default function NewProductPage() {
   }, []);
 
   function addSize() {
-    const s = sizeInput.trim();
-    if (!s) return;
-    setSizes((prev) => sortSizes([...prev, s]));
+    const items = sizeInput.split(",").map((s) => s.trim()).filter(Boolean);
+    if (items.length === 0) return;
+    setSizes((prev) => sortSizes([...prev, ...items]));
     setSizeInput("");
   }
 
   function addColor() {
-    const c = colorInput.trim();
-    if (!c) return;
-    if (!colors.includes(c)) setColors((prev) => [...prev, c]);
+    const items = colorInput.split(",").map((s) => s.trim()).filter(Boolean);
+    if (items.length === 0) return;
+    setColors((prev) => Array.from(new Set([...prev, ...items])));
     setColorInput("");
   }
 
@@ -241,9 +241,9 @@ export default function NewProductPage() {
                       className="flex-1 rounded-lg border border-forest-primary/20 px-3 py-2 text-sm"
                     />
                     <button type="button" onClick={() => {
-                      const v = estimatedAgeInput.trim();
-                      if (!v) return;
-                      setEstimatedAges((prev) => sortEstimatedAges([...prev, v]));
+                      const items = estimatedAgeInput.split(",").map((s) => s.trim()).filter(Boolean);
+                      if (items.length === 0) return;
+                      setEstimatedAges((prev) => sortEstimatedAges([...prev, ...items]));
                       setEstimatedAgeInput("");
                     }} className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm">Tambah</button>
                   </div>
