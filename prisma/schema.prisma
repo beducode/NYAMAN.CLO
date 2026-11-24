@@ -76,6 +76,13 @@ model ProductVariant {
   minWholesaleQty    Int      @default(12) @map("min_wholesale_qty")
   currentStock       Int      @default(0) @map("current_stock")
   lowStockThreshold  Int      @default(5) @map("low_stock_threshold")
+  chestCircumference Float?   @map("chest_circumference")
+  shirtLength        Float?   @map("shirt_length")
+  pantsLength        Float?   @map("pants_length")
+  waistWidth         Float?   @map("waist_width")
+  sleeveLength       Float?   @map("sleeve_length")
+  armpitCircumference Float?  @map("armpit_circumference")
+  armCircumference   Float?   @map("arm_circumference")
   barcodeCode        String   @unique @map("barcode_code")
 
   product          Product           @relation(fields: [productId], references: [id])

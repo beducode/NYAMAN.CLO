@@ -35,6 +35,13 @@ export async function GET() {
         minWholesaleQty: v.minWholesaleQty,
         currentStock: v.currentStock,
         lowStockThreshold: v.lowStockThreshold,
+        chestCircumference: v.chestCircumference,
+        shirtLength: v.shirtLength,
+        pantsLength: v.pantsLength,
+        waistWidth: v.waistWidth,
+        sleeveLength: v.sleeveLength,
+        armpitCircumference: v.armpitCircumference,
+        armCircumference: v.armCircumference,
       })),
     }))
   );
@@ -93,6 +100,13 @@ export async function POST(req: Request) {
             minWholesaleQty: Number(v.minWholesaleQty) || 12,
             currentStock: Number(v.currentStock) || 0,
             lowStockThreshold: Number(v.lowStockThreshold) || 5,
+            chestCircumference: v.chestCircumference ? Number(v.chestCircumference) : null,
+            shirtLength: v.shirtLength ? Number(v.shirtLength) : null,
+            pantsLength: v.pantsLength ? Number(v.pantsLength) : null,
+            waistWidth: v.waistWidth ? Number(v.waistWidth) : null,
+            sleeveLength: v.sleeveLength ? Number(v.sleeveLength) : null,
+            armpitCircumference: v.armpitCircumference ? Number(v.armpitCircumference) : null,
+            armCircumference: v.armCircumference ? Number(v.armCircumference) : null,
             barcodeCode: `BC-${sku}`,
           },
         });

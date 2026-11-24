@@ -13,6 +13,13 @@ type Variant = {
   minWholesaleQty: number;
   currentStock: number;
   lowStockThreshold: number;
+  chestCircumference: number | null;
+  shirtLength: number | null;
+  pantsLength: number | null;
+  waistWidth: number | null;
+  sleeveLength: number | null;
+  armpitCircumference: number | null;
+  armCircumference: number | null;
 };
 
 const DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
@@ -85,6 +92,13 @@ export default function NewProductPage() {
         minWholesaleQty: 12,
         currentStock: 0,
         lowStockThreshold: 5,
+        chestCircumference: null,
+        shirtLength: null,
+        pantsLength: null,
+        waistWidth: null,
+        sleeveLength: null,
+        armpitCircumference: null,
+        armCircumference: null,
       },
     ]);
   }
@@ -273,6 +287,39 @@ export default function NewProductPage() {
                       <div>
                         <label className="block text-xs mb-1">Low Stock</label>
                         <input type="number" min={0} value={v.lowStockThreshold} onChange={(e) => updateVariant(idx, { lowStockThreshold: Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-ink-primary/70 mb-2">Ukuran Tubuh (cm)</p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div>
+                          <label className="block text-xs mb-1">Lingkar Dada</label>
+                          <input type="number" min={0} step="0.1" value={v.chestCircumference ?? ""} onChange={(e) => updateVariant(idx, { chestCircumference: e.target.value === "" ? null : Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs mb-1">Panjang Baju</label>
+                          <input type="number" min={0} step="0.1" value={v.shirtLength ?? ""} onChange={(e) => updateVariant(idx, { shirtLength: e.target.value === "" ? null : Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs mb-1">Panjang Celana</label>
+                          <input type="number" min={0} step="0.1" value={v.pantsLength ?? ""} onChange={(e) => updateVariant(idx, { pantsLength: e.target.value === "" ? null : Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs mb-1">Lebar Pinggang</label>
+                          <input type="number" min={0} step="0.1" value={v.waistWidth ?? ""} onChange={(e) => updateVariant(idx, { waistWidth: e.target.value === "" ? null : Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs mb-1">Panjang Tangan</label>
+                          <input type="number" min={0} step="0.1" value={v.sleeveLength ?? ""} onChange={(e) => updateVariant(idx, { sleeveLength: e.target.value === "" ? null : Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs mb-1">Lingkar Ketiak</label>
+                          <input type="number" min={0} step="0.1" value={v.armpitCircumference ?? ""} onChange={(e) => updateVariant(idx, { armpitCircumference: e.target.value === "" ? null : Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs mb-1">Lingkar Tangan</label>
+                          <input type="number" min={0} step="0.1" value={v.armCircumference ?? ""} onChange={(e) => updateVariant(idx, { armCircumference: e.target.value === "" ? null : Number(e.target.value) })} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                        </div>
                       </div>
                     </div>
                   </div>
