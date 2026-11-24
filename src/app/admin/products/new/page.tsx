@@ -17,6 +17,27 @@ type Variant = {
 
 const DEFAULT_SIZES = ["S", "M", "L", "XL", "XXL"];
 
+const SIZE_RANK: Record<string, number> = {
+  XXS: 1, XS: 2, S: 3, M: 4, L: 5, XL: 6, XXL: 7, "2XL": 7, XXXL: 8, "3XL": 8, "4XL": 9, "5XL": 10,
+};
+
+function sizeRank(s: string) {
+  const key = s.trim().toUpperCase();
+  if (SIZE_RANK[key]) return SIZE_RANK[key];
+  const num = parseInt(key, 10);
+  if (!isNaN(num)) return 100 + num;
+  return 1000;
+}
+
+function sortSizes(list: string[]) {
+  return Array.from(new Set(list)).sort((a, b) => {
+    const ra = sizeRank(a);
+    const rb = sizeRank(b);
+    if (ra !== rb) return ra - rb;
+    return a.localeCompare(b, "id");
+  });
+}
+
 export default function NewProductPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -42,7 +63,7 @@ export default function NewProductPage() {
   function addSize() {
     const s = sizeInput.trim();
     if (!s) return;
-    if (!sizes.includes(s)) setSizes((prev) => [...prev, s]);
+    setSizes((prev) => sortSizes([...prev, s]));
     setSizeInput("");
   }
 
@@ -233,7 +254,7 @@ export default function NewProductPage() {
                           onChange={(e) => {
                             const val = e.target.value;
                             updateVariant(idx, { size: val });
-                            if (val && !sizes.includes(val)) setSizes((prev) => [...prev, val]);
+                            if (val && !sizes.includes(val)) setSizes((prev) => sortSizes([...prev, val]));
                           }}
                           className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm"
                         />
