@@ -42,7 +42,6 @@ export default function NewProductPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [materialType, setMaterialType] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [isPublished, setIsPublished] = useState(true);
@@ -115,7 +114,6 @@ export default function NewProductPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
-        description,
         materialType,
         categoryId: Number(categoryId),
         isPublished,
@@ -165,10 +163,6 @@ export default function NewProductPage() {
               <div>
                 <label className="block text-sm font-medium mb-1">Material</label>
                 <input value={materialType} onChange={(e) => setMaterialType(e.target.value)} className="w-full rounded-lg border border-forest-primary/20 px-3 py-2" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Deskripsi</label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full rounded-lg border border-forest-primary/20 px-3 py-2" rows={3} />
               </div>
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)} />
