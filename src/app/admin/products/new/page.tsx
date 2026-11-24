@@ -50,6 +50,7 @@ export default function NewProductPage() {
   const [name, setName] = useState("");
   const [materialType] = useState("");
   const [categoryId, setCategoryId] = useState("");
+  const [model, setModel] = useState("");
   const [isPublished, setIsPublished] = useState(true);
 
   const [sizes, setSizes] = useState<string[]>(DEFAULT_SIZES);
@@ -126,7 +127,7 @@ export default function NewProductPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
-        materialType,
+        model,
         categoryId: Number(categoryId),
         isPublished,
         variants,
@@ -169,6 +170,15 @@ export default function NewProductPage() {
                   <option value="">Pilih kategori...</option>
                   {categories.map((c) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Model</label>
+                <select value={model} onChange={(e) => setModel(e.target.value)} className="w-full rounded-lg border border-forest-primary/20 px-3 py-2">
+                  <option value="">Pilih model...</option>
+                  {["Daster","Gamis","Celana","Kemeja","Dress","Koko Pendek","Koko Panjang","Tunik","Oneset"].map((m) => (
+                    <option key={m} value={m}>{m}</option>
                   ))}
                 </select>
               </div>
@@ -224,7 +234,7 @@ export default function NewProductPage() {
                 <h2 className="font-display font-semibold text-ink-primary">Varian Produk</h2>
                 <button type="button" onClick={addVariant} className="bg-ochre-accent text-ink-primary px-4 py-2 rounded-lg text-sm font-semibold">+ Tambah Varian</button>
               </div>
-              <p className="text-xs text-ink-primary/60">1 produk bisa memiliki banyak varian warna/motif; setiap varian bisa memiliki ukuran berbeda.</p>
+
 
               {variants.length === 0 && <p className="text-sm text-ink-primary/60">Belum ada varian.</p>}
 

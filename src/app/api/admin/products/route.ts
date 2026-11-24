@@ -22,6 +22,7 @@ export async function GET() {
       slug: p.slug,
       description: p.description,
       materialType: p.materialType,
+      model: p.model,
       category: p.category,
       isPublished: p.isPublished,
       variants: p.variants.map((v) => ({
@@ -54,7 +55,7 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const { name, description, materialType, categoryId, isPublished, variants } = body;
+  const { name, description, materialType, model, categoryId, isPublished, variants } = body;
   if (!name || !categoryId) {
     return NextResponse.json({ error: "Nama dan kategori wajib diisi" }, { status: 400 });
   }
@@ -72,6 +73,7 @@ export async function POST(req: Request) {
           slug,
           description: description || null,
           materialType: materialType || null,
+          model: model || null,
           categoryId: Number(categoryId),
           isPublished: Boolean(isPublished),
         },

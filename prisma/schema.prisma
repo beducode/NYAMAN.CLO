@@ -55,6 +55,7 @@ model Product {
   slug          String   @unique
   description   String?
   materialType  String?  @map("material_type")
+  model         String?
   isPublished   Boolean  @default(false) @map("is_published")
   createdAt     DateTime @default(now()) @map("created_at")
 
