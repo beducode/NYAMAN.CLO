@@ -324,7 +324,7 @@ export default function NewProductPage() {
                     <div className="flex flex-wrap gap-2 mb-3">
                       {sizes.map((s, i) => (
                         <span key={s} className="text-xs px-2 py-1 rounded bg-forest-primary/10 text-forest-primary font-mono">
-                          {s}{estimatedAges[i] ? ` → ${estimatedAges[i]}` : ""}
+                          {s}{estimatedAges[i] ? ` | ${estimatedAges[i]}` : ""}
                         </span>
                       ))}
                     </div>
