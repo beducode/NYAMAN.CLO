@@ -75,7 +75,7 @@ export default function NewProductPage() {
   const [sizes, setSizes] = useState<string[]>(DEFAULT_SIZES);
   const [colors, setColors] = useState<string[]>([]);
   const [estimatedAges, setEstimatedAges] = useState<string[]>([]);
-  const [sizeTemplates, setSizeTemplates] = useState<Record<string, { retailPrice: number; wholesalePrice: number; minWholesaleQty: number; currentStock: number; lowStockThreshold: number }>>({});
+  const [sizeTemplates, setSizeTemplates] = useState<Record<string, { chestCircumference: number | null; shirtLength: number | null; pantsLength: number | null; waistWidth: number | null; sleeveLength: number | null; armpitCircumference: number | null; armCircumference: number | null }>>({});
   const [sizeInput, setSizeInput] = useState("");
   const [colorInput, setColorInput] = useState("");
   const [estimatedAgeInput, setEstimatedAgeInput] = useState("");
@@ -144,22 +144,22 @@ export default function NewProductPage() {
     for (const c of cList) {
       sList.forEach((s, i) => {
         const age = isAnak && estimatedAges.length ? (estimatedAges[i] ?? null) : null;
-        const tpl = sizeTemplates[s] || { retailPrice: 0, wholesalePrice: 0, minWholesaleQty: 12, currentStock: 0, lowStockThreshold: 5 };
+        const tpl = sizeTemplates[s] || { chestCircumference: null, shirtLength: null, pantsLength: null, waistWidth: null, sleeveLength: null, armpitCircumference: null, armCircumference: null };
         combos.push({
           color: c,
           size: s,
-          retailPrice: tpl.retailPrice,
-          wholesalePrice: tpl.wholesalePrice,
-          minWholesaleQty: tpl.minWholesaleQty,
-          currentStock: tpl.currentStock,
-          lowStockThreshold: tpl.lowStockThreshold,
-          chestCircumference: null,
-          shirtLength: null,
-          pantsLength: null,
-          waistWidth: null,
-          sleeveLength: null,
-          armpitCircumference: null,
-          armCircumference: null,
+          retailPrice: 0,
+          wholesalePrice: 0,
+          minWholesaleQty: 12,
+          currentStock: 0,
+          lowStockThreshold: 5,
+          chestCircumference: tpl.chestCircumference,
+          shirtLength: tpl.shirtLength,
+          pantsLength: tpl.pantsLength,
+          waistWidth: tpl.waistWidth,
+          sleeveLength: tpl.sleeveLength,
+          armpitCircumference: tpl.armpitCircumference,
+          armCircumference: tpl.armCircumference,
           estimatedAge: age,
         });
       });
@@ -331,26 +331,34 @@ export default function NewProductPage() {
                             <p className="text-sm font-semibold text-ink-primary mb-2">
                               {s}{estimatedAges[i] ? ` | ${estimatedAges[i]}` : ""}
                             </p>
-                            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                               <div>
-                                <label className="block text-xs mb-1">Harga Eceran</label>
-                                <input type="number" min={0} value={tpl.retailPrice} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, retailPrice: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                                <label className="block text-xs mb-1">Lingkar Dada</label>
+                                <input type="number" min={0} step="0.1" value={tpl.chestCircumference ?? ""} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, chestCircumference: e.target.value === "" ? null : Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
                               </div>
                               <div>
-                                <label className="block text-xs mb-1">Harga Grosir</label>
-                                <input type="number" min={0} value={tpl.wholesalePrice} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, wholesalePrice: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                                <label className="block text-xs mb-1">Panjang Baju</label>
+                                <input type="number" min={0} step="0.1" value={tpl.shirtLength ?? ""} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, shirtLength: e.target.value === "" ? null : Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
                               </div>
                               <div>
-                                <label className="block text-xs mb-1">Min Grosir (pcs)</label>
-                                <input type="number" min={1} value={tpl.minWholesaleQty} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, minWholesaleQty: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                                <label className="block text-xs mb-1">Panjang Celana</label>
+                                <input type="number" min={0} step="0.1" value={tpl.pantsLength ?? ""} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, pantsLength: e.target.value === "" ? null : Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
                               </div>
                               <div>
-                                <label className="block text-xs mb-1">Stok</label>
-                                <input type="number" min={0} value={tpl.currentStock} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, currentStock: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                                <label className="block text-xs mb-1">Lebar Pinggang</label>
+                                <input type="number" min={0} step="0.1" value={tpl.waistWidth ?? ""} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, waistWidth: e.target.value === "" ? null : Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
                               </div>
                               <div>
-                                <label className="block text-xs mb-1">Minimal Stok</label>
-                                <input type="number" min={0} value={tpl.lowStockThreshold} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, lowStockThreshold: Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                                <label className="block text-xs mb-1">Panjang Tangan</label>
+                                <input type="number" min={0} step="0.1" value={tpl.sleeveLength ?? ""} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, sleeveLength: e.target.value === "" ? null : Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                              </div>
+                              <div>
+                                <label className="block text-xs mb-1">Lingkar Ketiak</label>
+                                <input type="number" min={0} step="0.1" value={tpl.armpitCircumference ?? ""} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, armpitCircumference: e.target.value === "" ? null : Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
+                              </div>
+                              <div>
+                                <label className="block text-xs mb-1">Lingkar Tangan</label>
+                                <input type="number" min={0} step="0.1" value={tpl.armCircumference ?? ""} onChange={(e) => setSizeTemplates((prev) => ({ ...prev, [s]: { ...tpl, armCircumference: e.target.value === "" ? null : Number(e.target.value) } }))} className="w-full rounded-lg border border-forest-primary/20 px-2 py-1.5 text-sm" />
                               </div>
                             </div>
                           </div>
