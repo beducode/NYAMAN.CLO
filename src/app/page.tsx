@@ -1,69 +1,97 @@
-import Image from "next/image";
+import { prisma } from "@/lib/prisma";
+import ProductCard from "@/components/ProductCard";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const products = await prisma.product.findMany({
+    where: { isPublished: true },
+    include: { category: true, variants: true },
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen">
+      {/* Header */}
+      <header className="bg-surface-card border-b border-forest-primary/10">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src="/data/LOGO.png" alt="nyaman.clo" className="h-9 w-auto" />
+            <span className="font-display font-bold text-forest-primary text-lg">nyaman.clo</span>
+          </div>
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-ink-primary">
+            <a href="#" className="hover:text-forest-primary">Semua Koleksi</a>
+            <a href="#" className="hover:text-forest-primary">Heavyweight Tee</a>
+            <a href="#" className="hover:text-forest-primary">Workshirt & Polo</a>
+            <a href="#" className="hover:text-forest-primary">Outerwear</a>
+            <a href="/admin/login" className="text-forest-primary">Admin</a>
+          </nav>
+          <div className="flex items-center gap-3">
+            <a href="#" className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-forest-dark">Order Makloon</a>
+            <button className="bg-forest-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-forest-dark">Keranjang</button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+      </header>
+
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-forest-dark to-forest-primary text-white">
+        <div className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-display font-extrabold leading-tight">
+              Konveksi Presisi & Nyaman
+            </h1>
+            <p className="mt-4 text-white/80 text-lg">
+              Koleksi apparel premium dengan stok gudang live. Harga eceran dan grosir otomatis.
+            </p>
+            <a href="#koleksi" className="inline-block mt-6 bg-ochre-accent text-ink-primary px-6 py-3 rounded-lg font-semibold hover:bg-ochre-hover">
+              Beli Sekarang
+            </a>
+          </div>
+          <div className="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
+            <p className="text-sm font-medium text-white/80">Status Gudang Live</p>
+            <p className="text-3xl font-mono font-bold mt-2">
+              {products.reduce((a, p) => a + p.variants.reduce((b, v) => b + v.currentStock, 0), 0)} pcs
+            </p>
+            <p className="text-xs text-white/60 mt-1">Total stok ready real-time</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Products */}
+      <section id="koleksi" className="max-w-7xl mx-auto px-6 py-16">
+        <h2 className="text-2xl font-display font-bold text-ink-primary mb-8">Semua Koleksi</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {products.map((p) => (
+            <ProductCard
+              key={p.id}
+              product={{
+                id: p.id,
+                name: p.name,
+                slug: p.slug,
+                description: p.description,
+                materialType: p.materialType,
+                category: p.category.name,
+                variants: p.variants.map((v) => ({
+                  id: v.id,
+                  color: v.color,
+                  size: v.size,
+                  retailPrice: Number(v.retailPrice),
+                  wholesalePrice: Number(v.wholesalePrice),
+                  minWholesaleQty: v.minWholesaleQty,
+                  currentStock: v.currentStock,
+                  lowStockThreshold: v.lowStockThreshold,
+                  stockStatus: v.currentStock <= 0 ? "out" : v.currentStock <= v.lowStockThreshold ? "low" : "ready",
+                })),
+              }}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      <footer className="border-t border-forest-primary/10 py-8 text-center text-sm text-ink-primary/60">
+        <img src="/data/LOGO.png" alt="nyaman.clo" className="h-8 w-auto mx-auto mb-2" />
+        © {new Date().getFullYear()} nyaman.clo — NYAMAN FLOW
+      </footer>
+    </main>
   );
 }
