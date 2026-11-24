@@ -59,6 +59,7 @@ export default function AdminProductsPage() {
                     <th className="py-3 px-4">Kategori</th>
                     <th className="py-3 px-4">Varian</th>
                     <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -72,10 +73,13 @@ export default function AdminProductsPage() {
                           {p.isPublished ? "Published" : "Draft"}
                         </span>
                       </td>
+                      <td className="py-3 px-4">
+                        <Link href={`/admin/products/${p.id}/edit`} className="text-sm text-forest-primary hover:underline">Edit</Link>
+                      </td>
                     </tr>
                   ))}
                   {products.length === 0 && (
-                    <tr><td colSpan={4} className="py-6 text-center text-ink-primary/60">Belum ada produk.</td></tr>
+                    <tr><td colSpan={5} className="py-6 text-center text-ink-primary/60">Belum ada produk.</td></tr>
                   )}
                 </tbody>
               </table>
