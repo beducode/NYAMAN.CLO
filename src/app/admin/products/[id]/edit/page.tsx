@@ -132,30 +132,28 @@ export default function EditProductPage() {
   function generateVariants() {
     const cList = colors.length ? colors : [""];
     const sList = sizes.length ? sizes : [""];
-    const aList = isAnak && estimatedAges.length ? estimatedAges : [null];
     const combos: Variant[] = [];
     for (const c of cList) {
-      for (const s of sList) {
-        for (const a of aList) {
-          combos.push({
-            color: c,
-            size: s,
-            retailPrice: 0,
-            wholesalePrice: 0,
-            minWholesaleQty: 12,
-            currentStock: 0,
-            lowStockThreshold: 5,
-            chestCircumference: null,
-            shirtLength: null,
-            pantsLength: null,
-            waistWidth: null,
-            sleeveLength: null,
-            armpitCircumference: null,
-            armCircumference: null,
-            estimatedAge: a,
-          });
-        }
-      }
+      sList.forEach((s, i) => {
+        const age = isAnak && estimatedAges.length ? (estimatedAges[i] ?? null) : null;
+        combos.push({
+          color: c,
+          size: s,
+          retailPrice: 0,
+          wholesalePrice: 0,
+          minWholesaleQty: 12,
+          currentStock: 0,
+          lowStockThreshold: 5,
+          chestCircumference: null,
+          shirtLength: null,
+          pantsLength: null,
+          waistWidth: null,
+          sleeveLength: null,
+          armpitCircumference: null,
+          armCircumference: null,
+          estimatedAge: age,
+        });
+      });
     }
     setVariants(combos);
   }
